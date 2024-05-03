@@ -1,4 +1,4 @@
-	package controllers
+package controllers
 
 import (
 	"github.com/gin-gonic/gin"
@@ -172,4 +172,3 @@ func GetUsers(c *gin.Context) {
 	// Respond with the list of users
 	c.JSON(http.StatusOK, users)
 }
-
