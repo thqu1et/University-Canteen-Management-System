@@ -8,6 +8,19 @@ import (
 	"strconv"
 )
 
+// ProcessPayment godoc
+// @Summary Process a payment for an order
+// @Description Process a payment by matching it with an order total and updating the payment status.
+// @Tags payment
+// @Accept json
+// @Produce json
+// @Param id path int true "Order ID"
+// @Param payment body models.Payment required "Payment Details"
+// @Success 200 {object} object{"message": "Payment processed successfully", "order": "Order details"}
+// @Failure 400 {object} object{"error": "Invalid order ID or Payment amount does not match the order total"}
+// @Failure 404 {object} object{"error": "Order not found"}
+// @Failure 500 {object} object{"error": "Internal server error"}
+// @Router /payment/process/{id} [post]
 func ProcessPayment(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

@@ -11,6 +11,16 @@ import (
 	"time"
 )
 
+// SignUp godoc
+// @Summary Sign up a new user
+// @Description Register a new user with their first name, last name, email, and password
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param user body struct{FirstName string; LastName string; Email string; Password string} true "SignUp Info"
+// @Success 200 {object} object{"message": "user created successfully", "user_id": "ID"}
+// @Failure 400 {object} object{"error": "error message"}
+// @Router /signup [post]
 func SignUp(c *gin.Context) {
 	var body struct {
 		FirstName string
@@ -54,6 +64,17 @@ func SignUp(c *gin.Context) {
 	})
 }
 
+// Login godoc
+// @Summary Log in a user
+// @Description Log in with email and password
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param credentials body struct{Email string; Password string} true "Login Credentials"
+// @Success 200 {object} object{"token": "JWT Token"}
+// @Failure 400 {object} object{"error": "Invalid email or password"}
+// @Failure 500 {object} object{"error": "JWT secret is not set"}
+// @Router /login [post]
 func Login(c *gin.Context) {
 	var body struct {
 		Email    string
@@ -124,6 +145,14 @@ func Login(c *gin.Context) {
 	})
 }
 
+// Validate godoc
+// @Summary Validate user token
+// @Description Checks if the user's token is valid and returns the user info if valid
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} object{"message": "user info"}
+// @Router /validate [get]
 func Validate(c *gin.Context) {
 	user, _ := c.Get("user")
 
@@ -132,6 +161,16 @@ func Validate(c *gin.Context) {
 	})
 }
 
+// GetUser godoc
+// @Summary Get a single user
+// @Description Retrieves a single user by user ID
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.User
+// @Failure 404 {object} object{"error": "User not found"}
+// @Router /users/{id} [get]
 func GetUser(c *gin.Context) {
 	userID := c.Param("id")
 	var user models.User
@@ -148,6 +187,15 @@ func GetUser(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
+// GetUsers godoc
+// @Summary Get all users
+// @Description Retrieves all registered users
+// @Tags user
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} []models.User
+// @Failure 500 {object} object{"error": "Failed to retrieve users"}
+// @Router /users [get]
 func GetUsers(c *gin.Context) {
 	var users []models.User
 

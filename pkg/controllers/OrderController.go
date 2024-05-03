@@ -8,6 +8,15 @@ import (
 	"strconv"
 )
 
+// GetOrders godoc
+// @Summary Retrieve all orders
+// @Description Get details of all orders with their associated items
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.Order
+// @Failure 500 {object} object {"error": "Failed to retrieve orders"}
+// @Router /orders [get]
 func GetOrders(c *gin.Context) {
 	var orders []models.Order
 	result := database.DB.Preload("OrderItems").Find(&orders)
@@ -18,6 +27,16 @@ func GetOrders(c *gin.Context) {
 	c.JSON(http.StatusOK, orders)
 }
 
+// GetOrder godoc
+// @Summary Retrieve a single order
+// @Description Get details of a specific order by ID, including its items
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Order ID"
+// @Success 200 {object} models.Order
+// @Failure 404 {object} object {"error": "Order not found"}
+// @Router /orders/{id} [get]
 func GetOrder(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var order models.Order
@@ -29,6 +48,17 @@ func GetOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, order)
 }
 
+// CreateOrder godoc
+// @Summary Create a new order
+// @Description Add a new order and calculate total from order items
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param order body models.Order required "Order Info"
+// @Success 201 {object} models.Order
+// @Failure 400 {object} object {"error": "Invalid input, object invalid"}
+// @Failure 500 {object} object {"error": "Failed to create order"}
+// @Router /orders [post]
 func CreateOrder(c *gin.Context) {
 	var order models.Order
 
@@ -54,6 +84,19 @@ func CreateOrder(c *gin.Context) {
 	c.JSON(http.StatusCreated, order)
 }
 
+// UpdateOrder godoc
+// @Summary Update an existing order
+// @Description Update details of an existing order by ID
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Order ID"
+// @Param order body models.Order required "Order Update Data"
+// @Success 200 {object} models.Order
+// @Failure 400 {object} object {"error": "Invalid input, object invalid"}
+// @Failure 404 {object} object {"error": "Order not found"}
+// @Failure 500 {object} object {"error": "Failed to update order"}
+// @Router /orders/{id} [put]
 func UpdateOrder(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	var order models.Order
@@ -73,6 +116,17 @@ func UpdateOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, order)
 }
 
+// DeleteOrder godoc
+// @Summary Delete an order
+// @Description Delete an order by ID
+// @Tags orders
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Order ID"
+// @Success 200 {object} object {"message": "Order deleted"}
+// @Failure 404 {object} object {"error": "No order found"}
+// @Failure 500 {object} object {"error": "Failed to delete order"}
+// @Router /orders/{id} [delete]
 func DeleteOrder(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	result := database.DB.Delete(&models.Order{}, id)

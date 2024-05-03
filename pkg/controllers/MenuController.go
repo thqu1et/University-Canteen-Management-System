@@ -10,6 +10,15 @@ import (
 	"strconv"
 )
 
+// GetMenuItems godoc
+// @Summary Retrieve all menu items
+// @Description Get details of all menu items in the database
+// @Tags menu
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.MenuItem
+// @Failure 500 {object} object {"error": "description of error"}
+// @Router /menu/items [get]
 func GetMenuItems(c *gin.Context) {
 	var menuItems []models.MenuItem
 	result := database.DB.Find(&menuItems)
@@ -23,6 +32,18 @@ func GetMenuItems(c *gin.Context) {
 	c.JSON(http.StatusOK, menuItems)
 }
 
+// GetMenuItem godoc
+// @Summary Retrieve a single menu item
+// @Description Get details of a specific menu item by ID
+// @Tags menu
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Menu Item ID"
+// @Success 200 {object} models.MenuItem
+// @Failure 400 {object} object {"error": "Invalid ID format"}
+// @Failure 404 {object} object {"error": "Menu item not found"}
+// @Failure 500 {object} object {"error": "Error retrieving menu item"}
+// @Router /menu/items/{id} [get]
 func GetMenuItem(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -53,6 +74,17 @@ func GetMenuItem(c *gin.Context) {
 	})
 }
 
+// CreateMenuItem godoc
+// @Summary Create a new menu item
+// @Description Add a new menu item to the database
+// @Tags menu
+// @Accept  json
+// @Produce  json
+// @Param menuItem body models.MenuItem required "Menu Item Info"
+// @Success 200 {object} object {"message": "Menu item created successfully"}
+// @Failure 400 {object} object {"error": "Failed to read body"}
+// @Failure 400 {object} object {"error": "Failed to create menu item"}
+// @Router /menu/items [post]
 func CreateMenuItem(c *gin.Context) {
 	var menuItem models.MenuItem
 	if err := c.BindJSON(&menuItem); err != nil {
@@ -75,6 +107,19 @@ func CreateMenuItem(c *gin.Context) {
 	})
 }
 
+// UpdateMenuItem godoc
+// @Summary Update an existing menu item
+// @Description Update details of an existing menu item by ID
+// @Tags menu
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Menu Item ID"
+// @Param menuItem body map[string]interface{} true "Menu Item Update Data"
+// @Success 200 {object} object {"message": "Menu item updated successfully"}
+// @Failure 400 {object} object {"error": "Failed to read body"}
+// @Failure 404 {object} object {"error": "Menu item not found"}
+// @Failure 500 {object} object {"error": "Failed to update menu item"}
+// @Router /menu/items/{id} [put]
 func UpdateMenuItem(c *gin.Context) {
 	id := c.Param("id")
 	var existingMenuItem models.MenuItem
@@ -107,6 +152,16 @@ func UpdateMenuItem(c *gin.Context) {
 	})
 }
 
+// DeleteMenuItem godoc
+// @Summary Delete a menu item
+// @Description Remove a menu item from the database by ID
+// @Tags menu
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Menu Item ID"
+// @Success 200 {object} object {"message": "Menu item deleted successfully"}
+// @Failure 500 {object} object {"error": "Failed to delete menu item"}
+// @Router /menu/items/{id} [delete]
 func DeleteMenuItem(c *gin.Context) {
 	id := c.Param("id")
 	result := database.DB.Delete(&models.MenuItem{}, id)
