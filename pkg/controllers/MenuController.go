@@ -1,7 +1,7 @@
 package controllers
 
 
-func GetMenu(c *gin.Context) {
+func GetMenuItems(c *gin.Context) {
     var menuItems []models.MenuItem
 
     result := database.DB.Find(&menuItems)
@@ -15,7 +15,23 @@ func GetMenu(c *gin.Context) {
     c.JSON(http.StatusOK, menuItems)
 }
 
-func CreateMenu(c *gin.Context) {
+func GetMenuItem(c *gin.Context) {
+    id := c.Param("id")
+    var menuItem models.MenuItem
+
+    result := database.DB.First(&menuItem, id)
+    if result.Error != nil {
+        c.JSON(http.StatusNotFound, gin.H{
+            "error": "Menu item not found",
+        })
+        return
+    }
+
+    c.JSON(http.StatusOK, menuItem)
+}
+
+
+func CreateMenuItem(c *gin.Context) {
     var menuItem models.MenuItem
     if err := c.BindJSON(&menuItem); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{
@@ -37,7 +53,7 @@ func CreateMenu(c *gin.Context) {
     })
 }
 
-func UpdateMenu(c *gin.Context) {
+func UpdateMenuItem(c *gin.Context) {
     id := c.Param("id")
     var menuItem models.MenuItem
 
@@ -62,7 +78,7 @@ func UpdateMenu(c *gin.Context) {
     })
 }
 
-func DeleteMenu(c *gin.Context) {
+func DeleteMenuItem(c *gin.Context) {
     id := c.Param("id")
     result := database.DB.Delete(&models.MenuItem{}, id)
     if result.Error != nil {
