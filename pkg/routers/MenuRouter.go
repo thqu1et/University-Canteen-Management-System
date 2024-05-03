@@ -5,9 +5,10 @@ import (
 	"postgresSQLProject/pkg/controllers"
 )
 
-func MenuRoutes(incomingRoutes *gin.Engine) {
-	incomingRoutes.GET("/menu", controllers.GetMenu)
-	incomingRoutes.POST("/menu/create_menu", controllers.CreateMenu)
-	incomingRoutes.PATCH("/menu/update_menu", controllers.UpdateMenu)
-	incomingRoutes.DELETE("/menu/delete_menu", controllers.DeleteMenu)
+func MenuItemRoutes(incomingRoutes *gin.Engine) {
+	incomingRoutes.GET("/menu_item", controllers.GetMenuItems)
+	incomingRoutes.GET("/menu_item/:menuitem_id", controllers.GetMenuItem)
+	incomingRoutes.POST("/menu/create_menu_item", controllers.CreateMenuItem)
+	incomingRoutes.PATCH("/menu/update_menu_item/:menuitem_id", controllers.UpdateMenuItem)
+	incomingRoutes.DELETE("/menu/delete_menu_item/:menuitem_id", controllers.DeleteMenuItem)
 }
