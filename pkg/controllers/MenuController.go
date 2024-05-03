@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 	"net/http"
 	"postgresSQLProject/pkg/database"
 	"postgresSQLProject/pkg/models"
+	"strconv"
 )
 
 func GetMenuItems(c *gin.Context) {
@@ -21,36 +24,34 @@ func GetMenuItems(c *gin.Context) {
 }
 
 func GetMenuItem(c *gin.Context) {
-    id, err := strconv.Atoi(c.Param("id"))
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "error": "Invalid ID format",
-        })
-        return
-    }
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Invalid ID format",
+		})
+		return
+	}
 
-    var menuItem models.MenuItem
+	var menuItem models.MenuItem
 
-    result := database.DB.First(&menuItem, id)
-    if result.Error != nil {
-        if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-            c.JSON(http.StatusNotFound, gin.H{
-                "error": "Menu item not found",
-            })
-        } else {
-            c.JSON(http.StatusInternalServerError, gin.H{
-                "error": "Error retrieving menu item: " + result.Error.Error(),
-            })
-        }
-        return
-    }
+	result := database.DB.First(&menuItem, id)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			c.JSON(http.StatusNotFound, gin.H{
+				"error": "Menu item not found",
+			})
+		} else {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Error retrieving menu item: " + result.Error.Error(),
+			})
+		}
+		return
+	}
 
-    c.JSON(http.StatusOK, gin.H{
-        "data": menuItem,
-    })
+	c.JSON(http.StatusOK, gin.H{
+		"data": menuItem,
+	})
 }
-
-
 
 func CreateMenuItem(c *gin.Context) {
 	var menuItem models.MenuItem
@@ -75,44 +76,10 @@ func CreateMenuItem(c *gin.Context) {
 }
 
 func UpdateMenuItem(c *gin.Context) {
-    id := c.Param("id")
-    var existingMenuItem models.MenuItem
-
-    result := database.DB.First(&existingMenuItem, id)
-    if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{
-            "error": "Menu item not found",
-        })
-        return
-    }
-
-    var updateData map[string]interface{}
-    if err := c.BindJSON(&updateData); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "error": "Failed to read body: " + err.Error(),
-        })
-        return
-    }
-
-    if err := database.DB.Model(&existingMenuItem).Updates(updateData).Error; err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": "Failed to update menu item: " + err.Error(),
-        })
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{
-        "message": "Menu item updated successfully",
-    })
-}
-
-
-
-func DeleteMenu(c *gin.Context) {
 	id := c.Param("id")
-	var menuItem models.MenuItem
+	var existingMenuItem models.MenuItem
 
-	result := database.DB.First(&menuItem, id)
+	result := database.DB.First(&existingMenuItem, id)
 	if result.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "Menu item not found",
@@ -120,14 +87,21 @@ func DeleteMenu(c *gin.Context) {
 		return
 	}
 
-	if err := c.BindJSON(&menuItem); err != nil {
+	var updateData map[string]interface{}
+	if err := c.BindJSON(&updateData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to read body: " + err.Error(),
 		})
 		return
 	}
 
-	database.DB.Save(&menuItem)
+	if err := database.DB.Model(&existingMenuItem).Updates(updateData).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to update menu item: " + err.Error(),
+		})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Menu item updated successfully",
 	})
