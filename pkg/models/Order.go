@@ -1,12 +1,13 @@
 package models
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Order struct {
-	ID          int       `json:"id"`
-	UserID      int       `json:"user_id"`
-	ItemIDs     []int     `json:"item_ids"` // Assuming items are represented by their IDs
-	TotalAmount float64   `json:"total_amount"`
-	Status      string    `json:"status"`
-	CreatedAt   time.Time `json:"created_at"`
+	gorm.Model
+	UserID     uint        `json:"user_id"`
+	Total      float64     `json:"total" gorm:"type:decimal(10,2)"`
+	Status     string      `json:"status"`
+	OrderItems []OrderItem `json:"order_items" gorm:"foreignKey:OrderID"`
 }

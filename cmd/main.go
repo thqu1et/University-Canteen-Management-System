@@ -15,6 +15,7 @@ func main() {
 	router.Use(gin.Logger())
 	routers.UserRoutes(router)
 	routers.MenuItemRoutes(router)
+	routers.OrderItemRoutes(router)
 	router.Run()
 }
 
