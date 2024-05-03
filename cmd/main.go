@@ -16,6 +16,7 @@ func main() {
 	routers.UserRoutes(router)
 	routers.MenuItemRoutes(router)
 	routers.OrderRoutes(router)
+	routers.PaymentRoutes(router)
 	router.Run()
 }
 
