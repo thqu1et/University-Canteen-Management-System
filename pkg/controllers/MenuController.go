@@ -8,7 +8,7 @@ import (
 )
 
 func GetMenuItems(c *gin.Context) {
-    var menuItems []models.MenuItem
+	var menuItems []models.MenuItem
 	result := database.DB.Find(&menuItems)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -21,29 +21,18 @@ func GetMenuItems(c *gin.Context) {
 }
 
 func GetMenuItem(c *gin.Context) {
-    id := c.Param("id")
-    var menuItem models.MenuItem
+	id := c.Param("id")
+	var menuItem models.MenuItem
 
-    result := database.DB.First(&menuItem, id)
-    if result.Error != nil {
-        c.JSON(http.StatusNotFound, gin.H{
-            "error": "Menu item not found",
-        })
-        return
-    }
+	result := database.DB.First(&menuItem, id)
+	if result.Error != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Menu item not found",
+		})
+		return
+	}
 
-    c.JSON(http.StatusOK, menuItem)
-}
-
-
-func CreateMenuItem(c *gin.Context) {
-    var menuItem models.MenuItem
-    if err := c.BindJSON(&menuItem); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{
-            "error": "Failed to read body: " + err.Error(),
-        })
-        return
-    }
+	c.JSON(http.StatusOK, menuItem)
 }
 
 func CreateMenuItem(c *gin.Context) {
@@ -69,8 +58,8 @@ func CreateMenuItem(c *gin.Context) {
 }
 
 func UpdateMenuItem(c *gin.Context) {
-    id := c.Param("id")
-    var menuItem models.MenuItem
+	id := c.Param("id")
+	var menuItem models.MenuItem
 
 	result := database.DB.First(&menuItem, id)
 	if result.Error != nil {
@@ -94,17 +83,6 @@ func UpdateMenuItem(c *gin.Context) {
 }
 
 func DeleteMenuItem(c *gin.Context) {
-    id := c.Param("id")
-    result := database.DB.Delete(&models.MenuItem{}, id)
-    if result.Error != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "error": "Failed to delete menu item: " + result.Error.Error(),
-        })
-        return
-    }
-}
-
-func DeleteMenu(c *gin.Context) {
 	id := c.Param("id")
 	result := database.DB.Delete(&models.MenuItem{}, id)
 	if result.Error != nil {
@@ -113,9 +91,4 @@ func DeleteMenu(c *gin.Context) {
 		})
 		return
 	}
-
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Menu item deleted successfully",
-	})
 }
