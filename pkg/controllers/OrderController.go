@@ -31,15 +31,26 @@ func GetOrder(c *gin.Context) {
 
 func CreateOrder(c *gin.Context) {
 	var order models.Order
+
 	if err := c.ShouldBindJSON(&order); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	var total float64
+	for _, item := range order.OrderItems {
+		total += item.Price * float64(item.Quantity)
+	}
+	order.Total = total
+
 	result := database.DB.Create(&order)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 		return
 	}
+
+	database.DB.Preload("OrderItems.MenuItem").Find(&order)
+
 	c.JSON(http.StatusCreated, order)
 }
 
