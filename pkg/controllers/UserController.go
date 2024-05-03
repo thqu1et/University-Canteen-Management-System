@@ -12,7 +12,6 @@ import (
 )
 
 func SignUp(c *gin.Context) {
-	// Define a struct for the request body
 	var body struct {
 		FirstName string
 		LastName  string
@@ -20,7 +19,6 @@ func SignUp(c *gin.Context) {
 		Password  string
 	}
 
-	// Bind the incoming JSON to body and handle errors
 	if err := c.BindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "failed to read body: " + err.Error(),
@@ -28,7 +26,6 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	// Hash the password
 	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -37,7 +34,6 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	// Create the user in the database
 	user := models.User{
 		FirstName: body.FirstName,
 		LastName:  body.LastName,
@@ -52,7 +48,6 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	// Respond with success
 	c.JSON(http.StatusOK, gin.H{
 		"message": "user created successfully",
 		"user_id": user.ID,
@@ -65,7 +60,6 @@ func Login(c *gin.Context) {
 		Password string
 	}
 
-	// Bind the incoming JSON to body and handle errors
 	if err := c.BindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Failed to read body: " + err.Error(),
@@ -73,7 +67,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	// Look up requested user
 	user := models.User{}
 	result := database.DB.Where("email = ?", body.Email).First(&user)
 
@@ -140,7 +133,6 @@ func Validate(c *gin.Context) {
 }
 
 func GetUser(c *gin.Context) {
-	// Get user ID from the path parameter
 	userID := c.Param("id")
 	var user models.User
 
@@ -153,14 +145,12 @@ func GetUser(c *gin.Context) {
 		return
 	}
 
-	// Respond with user data
 	c.JSON(http.StatusOK, user)
 }
 
 func GetUsers(c *gin.Context) {
 	var users []models.User
 
-	// Retrieve all users from the database
 	result := database.DB.Find(&users)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -169,6 +159,5 @@ func GetUsers(c *gin.Context) {
 		return
 	}
 
-	// Respond with the list of users
 	c.JSON(http.StatusOK, users)
 }

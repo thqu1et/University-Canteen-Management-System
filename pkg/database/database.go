@@ -18,7 +18,6 @@ func ConnectDB() {
 	port := os.Getenv("DB_PORT")
 	dbName := os.Getenv("DB_DATABASE")
 
-	// PostgreSQL DSN (Data Source Name) format
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Shanghai",
 		host, username, password, dbName, port)
 
@@ -28,7 +27,6 @@ func ConnectDB() {
 		log.Fatalf("Failed to connect to database: %v", err)
 	}
 
-	// To verify connection, you can use the SQL Ping via the underlying SQL DB
 	sqlDB, err := DB.DB()
 	if err != nil {
 		log.Fatalf("Failed to get generic database object from GORM: %v", err)
