@@ -1,7 +1,5 @@
 package models
 
-import "gorm.io/gorm"
-
 type MenuItem struct {
 	ID          int     `json:"id" gorm:"primaryKey"`
 	Name        string  `json:"name"`

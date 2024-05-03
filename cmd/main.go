@@ -14,7 +14,7 @@ func main() {
 	router := gin.New()
 	router.Use(gin.Logger())
 	routers.UserRoutes(router)
-
+	routers.MenuRoutes(router)
 	router.Run()
 }
 
