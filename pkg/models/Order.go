@@ -10,5 +10,5 @@ type Order struct {
 	Total      float64     `json:"total" gorm:"type:decimal(10,2)"`
 	Status     string      `json:"status"`
 	OrderItems []OrderItem `json:"order_items" gorm:"foreignKey:OrderID"`
-	Paid       bool        `json:"paid" gorm:"default:false"` // Indicates if the order has been fully paid
+	Paid       bool        `json:"paid" gorm:"default:false"`
 }

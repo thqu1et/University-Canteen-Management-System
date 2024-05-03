@@ -12,3 +12,17 @@ type Payment struct {
 	Method      string    `json:"method"`
 	ProcessedAt time.Time `json:"processed_at"`
 }
+
+func ProcessPayment(db *gorm.DB, payment Payment) error {
+	// Transactional handling of payment processing
+	return db.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&payment).Error; err != nil {
+			return err
+		}
+
+		if err := tx.Model(&Order{}).Where("id = ?", payment.OrderID).Update("status", "Paid").Error; err != nil {
+			return err
+		}
+		return nil
+	})
+}
