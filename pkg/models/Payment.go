@@ -14,7 +14,6 @@ type Payment struct {
 }
 
 func ProcessPayment(db *gorm.DB, payment Payment) error {
-	// Transactional handling of payment processing
 	return db.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&payment).Error; err != nil {
 			return err

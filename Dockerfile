@@ -3,6 +3,7 @@ FROM golang:1.22
 WORKDIR /app
 
 COPY go.mod go.sum ./
+COPY ./.env .
 COPY . .
 
 RUN go mod download
