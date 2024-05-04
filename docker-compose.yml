@@ -11,7 +11,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - go-final-postgres-data1:/var/lib/postgresql/data
+      - University-Canteen-Management-System::/var/lib/postgresql/data
 
   app:
     build: .
@@ -26,4 +26,4 @@ services:
       - ./pkg/database/.env:/app/.env  # Mounts the .env file to /app/.env inside the container
 
 volumes:
-  go-final-postgres-data1:
+  University-Canteen-Management-System:
