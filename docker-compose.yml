@@ -1,62 +1,26 @@
-#version: '3.3'
-#services:
-#  app:
-#    build: .
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - db
-#    env_file:
-#      - ./pkg/database/.env
-#    environment:
-#      - DB_HOST =${DB_HOST}
-#      - DB_USER=${DB_USER}
-#      - DB_PASSWORD={DB_PASSWORD}
-#      - DB_NAME=${DB_DATABASE}
-#      - DB_PORT=${DB_PORT}
-#      - ANOTHER_ENV_VAR=value
-#    networks:
-#      - app-network
-#
-#  db:
-#    image: postgres:latest
-#    ports:
-#      - "5432:5432"
-#    environment:
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=canteen
-#      - POSTGRES_DB=canteen
-#    volumes:
-#      - postgres_data:/var/lib/postgresql/data
-#    networks:
-#      - app-network
-#
-#volumes:
-#  postgres_data:
-
-
 version: '3.8'
 services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: qwerty
+      POSTGRES_USER: postgres
+      POSTGRES_DB: canteen
     ports:
       - "5433:5432"
     volumes:
-      - go-final-postgres-data:/var/lib/postgresql/data
-
+      - go-final-postgres-data1:/var/lib/postgresql/data
 
   app:
     build: .
     container_name: app
     image: app
     environment:
-      PG_URL: 'postgres://postgres:password@postgres/postgres'
+      PG_URL: 'postgres://postgres:qwerty@postgres/canteen'
     ports:
       - 8080:8080
     depends_on:
       - postgres
 
 volumes:
-  go-final-postgres-data:
+  go-final-postgres-data1:
