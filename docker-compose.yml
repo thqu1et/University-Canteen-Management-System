@@ -1,7 +1,9 @@
 version: '3.8'
+
 services:
   postgres:
     image: postgres:latest
+    restart: always
     environment:
       POSTGRES_PASSWORD: qwerty
       POSTGRES_USER: postgres
@@ -14,13 +16,14 @@ services:
   app:
     build: .
     container_name: app
-    image: app
     environment:
-      PG_URL: 'postgres://postgres:qwerty@postgres/canteen'
+      PG_URL: 'postgres://postgres:qwerty@postgres:5432/canteen'
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
       - postgres
+    volumes:
+      - ./pkg/database/.env:/app/.env  # Mounts the .env file to /app/.env inside the container
 
 volumes:
   go-final-postgres-data1:

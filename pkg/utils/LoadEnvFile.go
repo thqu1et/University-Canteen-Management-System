@@ -6,7 +6,7 @@ import (
 )
 
 func LoadEnvFile() {
-	err := godotenv.Load("/Users/askarabylkhaiyrov/Desktop/GoLang/postgresSQLProject/pkg/database/.env")
+	err := godotenv.Load("/app/.env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
